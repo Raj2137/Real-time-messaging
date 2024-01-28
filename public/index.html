@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatApp</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+   
+    <img class="logo" src="chatimg.png" alt="">
+    
+    <h1>Chatting</h1>
+    
+    <div class="container">
+    <div  id="messages"></div>
+    </div>
+    <!-- /* <input type="text" id="message" placeholder="Enter your message"/>
+    <button id="sendBtn">Send</button>  -->
+    <form action="#" id="send-container">
+        <input type="text" class="messageInp" id="message" placeholder="Enter your message">
+        <button class="btn" type="submit" id="sendBtn">Send</button>
+
+    </form>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+       
+
+         const messageContainer= document.querySelector('.container')
+
+       const append=(message, position)=>{
+             
+              const messageElement= document.createElement('div');
+              messageElement.innerText= message;
+              messageElement.classList.add('message')
+              // Add 'left' or 'right' class based on the position
+              messageElement.classList.add(position === 'user' ? 'left' : 'right');
+              messageContainer.append(messageElement);
+              
+        }
+
+
+        const socket = io();
+        const sendBtn= document.getElementById("sendBtn");
+        const messageInput= document.getElementById("message");
+        const allmessages= document.getElementById("messages")
+
+        socket.on('message', (message)=> 
+        {
+          const p= document.createElement('div');
+            p.innerHTML= message;
+            
+            append(message, 'right')
+           
+        });
+
+      /*  sendBtn.addEventListener("click", (e)=>{
+            const message= messageInput.value;
+            
+            
+            socket.emit("user-message", message);
+        }) */
+
+        sendBtn.addEventListener('click', (e)=>{
+            e.preventDefault();
+            const message= messageInput.value;
+            socket.emit("user-message", message);
+        })   
+                    
+    </script>
+</body>
+</html>
